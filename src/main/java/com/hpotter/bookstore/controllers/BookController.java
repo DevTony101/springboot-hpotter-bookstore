@@ -1,7 +1,7 @@
 package com.hpotter.bookstore.controllers;
 
 import com.hpotter.bookstore.entities.Book;
-import com.hpotter.bookstore.repositories.BookRepository;
+import com.hpotter.bookstore.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,31 +10,24 @@ import java.util.List;
 @RequestMapping("/api/")
 public class BookController {
 
-    private final BookRepository repository;
+    private final BookService bookService;
 
-    BookController(BookRepository repository) {
-        this.repository = repository;
+    BookController(BookService service) {
+        this.bookService = service;
     }
 
     @GetMapping("/books")
     public List<Book> getAll() {
-        return this.repository.findAll();
+        return this.bookService.getAll();
     }
 
     @GetMapping("/books/{id}")
     public Book getOne(@PathVariable Long id) {
-        return this.repository.findById(id).orElse(null);
+        return this.bookService.getOne(id);
     }
 
     @PutMapping("/books/{id}")
     public Book updateBook(@PathVariable Long id, @RequestBody Book newBook) {
-        return this.repository.findById(id).map(book -> {
-            book.setTitle(newBook.getTitle());
-            book.setDescription(newBook.getDescription());
-            book.setPrice(newBook.getPrice());
-            book.setQuantity(newBook.getQuantity());
-            book.setCover(newBook.getCover());
-            return repository.save(book);
-        }).orElse(null);
+        return this.bookService.updateBook(id, newBook);
     }
 }
