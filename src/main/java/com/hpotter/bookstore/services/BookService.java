@@ -8,4 +8,5 @@ public interface BookService {
     List<Book> getAll();
     Book getOne(Long id);
     Book updateBook(Long id, Book newBook);
+    void createRecords();
 }
